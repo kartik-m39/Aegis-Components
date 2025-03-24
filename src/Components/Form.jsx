@@ -661,7 +661,7 @@ function Form() {
       type: "function",
     },
   ];
-  const StudentRegistrationFees = ethers.parseEther("0.0025");
+  const StudentRegistrationFees = ethers.parseEther("0.00025");
 
   const registerStudent = async (data) => {
     if (!window.ethereum) {
