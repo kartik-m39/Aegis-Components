@@ -6,7 +6,7 @@ import TeacherConnectWallet from "./Components/TeacherConnectWallet";
 
 function App() {
   return (
-    <Form/>  )
+    <TeacherConnectWallet/>  )
 }
 
 export default App;

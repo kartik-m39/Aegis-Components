@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function TeacherUplaod() {
+function TeacherUplaod({ contract }) {
   const [question, setQuestion] = useState();
-
-//set it as a global state/ in smart contract?
-  const [CIDs, setCid] = useState([]);
+    //set it as a global state/ in smart contract?
+    const [CID, setCid] = useState();
 
 // add in .env import.meta.env.
   const PINATA_API_KEY = "34e5a156dcda211cc4f4";
@@ -13,13 +12,15 @@ function TeacherUplaod() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const value = e.target.form.elements[0].value;
-    setQuestion(value);
+    const uploadQues = e.target.form.elements[0].value;
+    const setName = e.target.form.elements[1].value;
+    const setAccessTime = e.target.form.elements[2].value;
+    setQuestion(uploadQues);
 
     try {
         //creating a proper JSON object to send to Pinata as useState is async and does not get updated immediately
         const jsonData = {
-            question: value
+            question: uploadQues
         }
 
       // Make the API request to Pinata
@@ -39,7 +40,19 @@ function TeacherUplaod() {
       const ipfsHash = response.data.IpfsHash;
       console.log("Successfully pinned JSON to IPFS with hash:", ipfsHash);
 
-      setCid((prev) => [...prev, ipfsHash] )
+      setCid(ipfsHash);
+
+      const unlockTime = Math.floor(
+        new Date(setAccessTime).getTime() / 1000
+      );
+
+      const transaction = await contract.appendQuestionCID({
+        ipfsHash,
+        setName,
+        unlockTime
+    });
+
+    await transaction.wait();
 
     } catch (err) {
       console.log(err);
@@ -57,6 +70,16 @@ function TeacherUplaod() {
         <input
           type="text"
           placeholder="Enter your question JSON"
+          className="w-full py-2 px-4 bg-gray-900 text-white border-2 border-green-500 rounded-md focus:outline-none focus:border-green-400 placeholder-gray-400"
+        />
+        <input
+          type="text"
+          placeholder="Enter your set name"
+          className="w-full py-2 px-4 bg-gray-900 text-white border-2 border-green-500 rounded-md focus:outline-none focus:border-green-400 placeholder-gray-400"
+        />
+        <input
+          type="text"
+          placeholder="Enter Set Access Time"
           className="w-full py-2 px-4 bg-gray-900 text-white border-2 border-green-500 rounded-md focus:outline-none focus:border-green-400 placeholder-gray-400"
         />
         <button

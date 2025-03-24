@@ -4,6 +4,8 @@ import TeacherUplaod from "./TeacherUpload";
 
 function TeacherConnectWallet() {
   const [isconnected, setIsConnected] = useState(false);
+  const[contract, setcontract] = useState();
+
 
   const contractAddress = "0x0d3f20d4a9c7b2a6cff5fb836815a7a86350b438";
   const contractABI = [
@@ -658,6 +660,7 @@ function TeacherConnectWallet() {
     const signer = await provider.getSigner();
 
     const contract = new ethers.Contract(contractAddress, contractABI, signer);
+    setcontract(contract);
 
     setIsConnected(true);
   }
@@ -670,7 +673,7 @@ function TeacherConnectWallet() {
       ) : (
         <div className="text-center">
           <p className="text-green-400 font-medium">Wallet Connected</p>
-          <TeacherUplaod />
+          <TeacherUplaod contract = {contract}/>
         </div>
       )}
     </div>

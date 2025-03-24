@@ -702,13 +702,6 @@ function Form() {
         handlesetStatus("Student already exists!");
       }
 
-//real comparison
-      const studentDetails = await contract.authStudents(student);
-      if (studentDetails.isRegistered) {
-        handlesetStatus("Student already registered!");
-        return;
-      }
-
       handlesetStatus("Waiting for MetaMask confirmation...");
 
       // Send Transaction
